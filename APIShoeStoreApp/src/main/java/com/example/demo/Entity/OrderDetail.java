@@ -1,38 +1,40 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
+import java.math.BigDecimal;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "OrderDetail")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name="accounts")
-public class Account implements Serializable {
+public class OrderDetail implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String email;
+    @ManyToOne
+    @JoinColumn(name = "oid", nullable = false)
+    Orders order;
+
+    @ManyToOne
+    @JoinColumn(name = "variantId")
+    ProductVariant variant;
 
     @Column(nullable = false)
-    String password;
+    BigDecimal price;
 
     @Column(nullable = false)
-    String fullname;
+    Integer quantity;
 
     @Column(nullable = false)
-    String phone;
-
-    LocalDate dob;
-
+    BigDecimal total;
 }
+

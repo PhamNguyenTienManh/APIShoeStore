@@ -1,38 +1,41 @@
 package com.example.demo.Entity;
 
+import com.example.demo.Enum.PaymentType;
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "Payment")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name="accounts")
-public class Account implements Serializable {
+public class Payment implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String email;
+    @ManyToOne
+    @JoinColumn(name = "oid", insertable = false, updatable = false)
+    Orders order;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    PaymentType type;
 
     @Column(nullable = false)
-    String password;
+    LocalDate date;
 
     @Column(nullable = false)
-    String fullname;
+    BigDecimal amount;
 
-    @Column(nullable = false)
-    String phone;
-
-    LocalDate dob;
 
 }
+

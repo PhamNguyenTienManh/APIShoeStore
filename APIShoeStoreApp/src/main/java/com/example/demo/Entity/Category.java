@@ -1,38 +1,29 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "Category")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name="accounts")
-public class Account implements Serializable {
+public class Category implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String email;
-
     @Column(nullable = false)
-    String password;
+    String name;
 
-    @Column(nullable = false)
-    String fullname;
-
-    @Column(nullable = false)
-    String phone;
-
-    LocalDate dob;
-
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+//    List<Product> products;
 }

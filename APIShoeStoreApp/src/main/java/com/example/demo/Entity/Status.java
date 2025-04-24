@@ -1,38 +1,25 @@
 package com.example.demo.Entity;
-
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "Status")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name="accounts")
-public class Account implements Serializable {
+public class Status implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String email;
-
     @Column(nullable = false)
-    String password;
-
-    @Column(nullable = false)
-    String fullname;
-
-    @Column(nullable = false)
-    String phone;
-
-    LocalDate dob;
+    String name;
 
 }
+
