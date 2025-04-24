@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +22,7 @@ public class ProductVariant implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "pId", nullable = false)
+    @JsonIgnore
     Product product;
 
 
