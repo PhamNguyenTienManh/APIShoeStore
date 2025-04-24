@@ -22,9 +22,9 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", nullable = false)
-    Account account;
+    @OneToOne
+    @JoinColumn(name = "account_id", unique = true, nullable = false)
+    private Account account;
 
 
 }
