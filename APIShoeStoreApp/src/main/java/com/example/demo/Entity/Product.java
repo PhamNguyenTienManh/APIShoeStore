@@ -19,9 +19,10 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cid", nullable = false)
     Category category;
+
 
     @Column(nullable = false)
     String name;

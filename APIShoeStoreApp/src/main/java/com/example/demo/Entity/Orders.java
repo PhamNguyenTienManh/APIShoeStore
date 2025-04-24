@@ -21,7 +21,7 @@ public class Orders implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     Account account;
 
@@ -45,7 +45,7 @@ public class Orders implements Serializable {
     BigDecimal total;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "statusId", insertable = false, updatable = false)
     Status status;
 

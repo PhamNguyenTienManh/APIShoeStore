@@ -19,9 +19,10 @@ public class ProductVariant implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pId", nullable = false)
     Product product;
+
 
 
     @Column(nullable = false)
