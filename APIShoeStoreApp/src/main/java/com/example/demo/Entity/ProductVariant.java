@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,17 +22,18 @@ public class ProductVariant implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "pId", nullable = false)
     @JsonIgnore
     Product product;
-
-
 
     @Column(nullable = false)
     Integer size;
 
     @Column(nullable = false)
     Integer stock;
+
+    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderDetail> orderDetails = new ArrayList<>();
 }
 
