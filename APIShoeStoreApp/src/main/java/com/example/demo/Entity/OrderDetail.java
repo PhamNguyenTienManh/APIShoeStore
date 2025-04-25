@@ -22,7 +22,7 @@ public class OrderDetail implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "oid", nullable = false)
-    Orders order;
+    Order order;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "variantId")

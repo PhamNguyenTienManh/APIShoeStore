@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -15,13 +17,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "Orders")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Orders implements Serializable {
+public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     Account account;
 
@@ -43,6 +45,9 @@ public class Orders implements Serializable {
 
     @Column(nullable = false)
     BigDecimal total;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OrderDetail> orderDetails = new ArrayList<>();
 
 
     @ManyToOne(cascade = CascadeType.ALL)
