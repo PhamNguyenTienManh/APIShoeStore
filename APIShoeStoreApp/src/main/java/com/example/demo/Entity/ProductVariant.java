@@ -25,8 +25,6 @@ public class ProductVariant implements Serializable {
     @JsonIgnore
     Product product;
 
-
-
     @Column(nullable = false)
     Integer size;
 

@@ -39,7 +39,7 @@ public class Product implements Serializable {
     String description;
 
     @Column(nullable = false)
-    Boolean isHidden;
+    Integer isHidden;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants = new ArrayList<>();
