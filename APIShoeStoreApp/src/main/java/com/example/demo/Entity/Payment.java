@@ -22,8 +22,8 @@ public class Payment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "oid", insertable = false, updatable = false)
+    @OneToOne
+    @JoinColumn(name = "oid")
     Order order;
 
     @Enumerated(EnumType.STRING)

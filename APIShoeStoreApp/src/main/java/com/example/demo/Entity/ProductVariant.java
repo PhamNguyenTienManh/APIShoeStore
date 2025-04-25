@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +25,7 @@ public class ProductVariant implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "pId", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     Product product;
 
     @Column(nullable = false)
@@ -33,7 +34,6 @@ public class ProductVariant implements Serializable {
     @Column(nullable = false)
     Integer stock;
 
-    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<OrderDetail> orderDetails = new ArrayList<>();
+
 }
 
