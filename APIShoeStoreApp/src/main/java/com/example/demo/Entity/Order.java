@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.example.demo.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -49,10 +50,9 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderDetail> orderDetails = new ArrayList<>();
 
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "statusId", insertable = false, updatable = false)
-    Status status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    OrderStatus status;
 
 }
 
