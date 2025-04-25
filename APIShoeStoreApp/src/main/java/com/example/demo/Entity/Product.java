@@ -39,9 +39,12 @@ public class Product implements Serializable {
     String description;
 
     @Column(nullable = false)
-    Boolean isHidden;
+    Integer isHidden;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Feedback> feedbacks = new ArrayList<>();
 
 }

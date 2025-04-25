@@ -24,7 +24,7 @@ public class Payment implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "oid", insertable = false, updatable = false)
-    Orders order;
+    Order order;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
