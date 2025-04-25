@@ -1,7 +1,10 @@
 package com.example.demo.Service;
 
+import com.example.demo.DTO.Request.NotificationRequest;
 import com.example.demo.DTO.Response.NotificationResponse;
+import com.example.demo.Entity.Account;
 import com.example.demo.Entity.Notification;
+import com.example.demo.Repository.AccountRepository;
 import com.example.demo.Repository.NotificationRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +25,11 @@ import java.util.Optional;
 public class NotificationService {
 
     private NotificationRepository repository;
+    private AccountRepository accountRepository;
 
     public List<NotificationResponse> findById(Long id) {
         Optional<List<Notification>> notifications = Optional.ofNullable(repository.findAllById(Collections.singleton(id)));
 
-        // Extract the list from the Optional
         if (notifications.isPresent()) {
             List<NotificationResponse> responses = new ArrayList<>();
             for (Notification notification : notifications.get()) {
@@ -41,6 +44,28 @@ public class NotificationService {
             return new ArrayList<>();
         }
     }
+
+    public boolean insertNotification(NotificationRequest notificationRequest) {
+        // Kiểm tra user_id trước khi tạo object
+        Long userId = notificationRequest.getUser_id();
+
+        if (!accountRepository.existsById(userId)) {
+            throw new RuntimeException("Account with ID " + userId + " does not exist.");
+        }
+
+        Account account = new Account();
+        account.setId(userId);  // ← Cách bạn muốn giữ nguyên
+
+        Notification notification = new Notification();
+        notification.setTitle(notificationRequest.getTitle());
+        notification.setMessage(notificationRequest.getContent());
+        notification.setCreatedAt(notificationRequest.getTimestamp());
+        notification.setAccount(account);
+
+        repository.save(notification);
+        return true;
+    }
+
 
 
 
