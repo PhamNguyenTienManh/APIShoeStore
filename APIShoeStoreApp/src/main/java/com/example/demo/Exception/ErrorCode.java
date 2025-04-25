@@ -9,6 +9,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated"),
     OTP_NOT_MATCHED(1007, "OTP does not match"),
     OTP_EXPIRED(1008, "OTP expired"),
+    PRODUCT_NOT_FOUND(2001, "Product not found"),
     ;
     ErrorCode(int code, String message) {
         this.code = code;
