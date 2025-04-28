@@ -46,7 +46,6 @@ public class NotificationService {
     }
 
     public boolean insertNotification(NotificationRequest notificationRequest) {
-        // Kiểm tra user_id trước khi tạo object
         Long userId = notificationRequest.getUser_id();
 
         if (!accountRepository.existsById(userId)) {
@@ -54,7 +53,7 @@ public class NotificationService {
         }
 
         Account account = new Account();
-        account.setId(userId);  // ← Cách bạn muốn giữ nguyên
+        account.setId(userId);
 
         Notification notification = new Notification();
         notification.setTitle(notificationRequest.getTitle());
