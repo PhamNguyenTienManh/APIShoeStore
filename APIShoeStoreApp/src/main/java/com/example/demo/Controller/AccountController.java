@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.Request.AccountDetailRequest;
 import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Response.APIResponse;
 import com.example.demo.Entity.Account;
@@ -50,5 +51,12 @@ public class AccountController {
         return apiResponse;
     }
 
+    @PutMapping("/update_accountDetail/{id}")
+    @ResponseBody
+    public APIResponse<Boolean> updateAccountDetail(@PathVariable Long id , @RequestBody AccountDetailRequest accountDetailRequest) {
+        APIResponse<Boolean> apiResponse = new APIResponse<>();
+        apiResponse.setResult(accountService.updateAccountDetails(id, accountDetailRequest));
+        return apiResponse;
+    }
 
 }
