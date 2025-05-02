@@ -49,6 +49,9 @@ public class Account implements Serializable {
     @JsonManagedReference
     List<Order> order = new ArrayList<>();
 
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private Cart cart;
+
 
 
 }

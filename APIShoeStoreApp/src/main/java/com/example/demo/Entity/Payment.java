@@ -34,6 +34,6 @@ public class Payment implements Serializable {
     LocalDate date;
 
     @Column(nullable = false)
-    BigDecimal amount;
+    Double totalPrice;
 }
 

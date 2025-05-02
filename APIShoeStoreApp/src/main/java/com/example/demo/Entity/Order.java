@@ -25,7 +25,7 @@ public class Order implements Serializable {
     Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    @JoinColumn(name = "userId")
     Account account;
 
     @Column(nullable = false)
@@ -45,7 +45,7 @@ public class Order implements Serializable {
     LocalDateTime orderDate;
 
     @Column(nullable = false)
-    BigDecimal total;
+    Double total;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     List<OrderDetail> orderDetails = new ArrayList<>();

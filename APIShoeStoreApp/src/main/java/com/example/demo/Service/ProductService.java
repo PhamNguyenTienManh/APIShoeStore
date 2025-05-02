@@ -57,6 +57,7 @@ public class ProductService {
         Product product = productRepository.findByName(productName)
                 .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         ProductDetailResponse productDetailResponse = new ProductDetailResponse();
+        productDetailResponse.setId(product.getId());
         productDetailResponse.setName(product.getName());
         productDetailResponse.setPrice(product.getPrice());
         productDetailResponse.setImage(product.getImage());
@@ -86,6 +87,31 @@ public class ProductService {
 
         // Trả về productDetailResponse
         return productDetailResponse;
+    }
+
+    public List<ProductResponse> getProductByCategory (String categoryName) {
+        List<Product> products = productRepository.findByCategoryName(categoryName);
+        List<ProductResponse> productResponses = new ArrayList<>();
+        for (Product product : products) {
+            int numstar = 0;
+            int i =0;
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setName(product.getName());
+            productResponse.setPrice(product.getPrice());
+            productResponse.setImage(product.getImage());
+            List<Feedback> feedbacks = product.getFeedbacks();
+            float rateNum = 0;
+            if (feedbacks != null && !feedbacks.isEmpty()) {
+                for (Feedback feedback : feedbacks) {
+                    numstar = numstar + feedback.getRate();
+                    i++;
+                }
+                rateNum = (float) numstar / i;
+            }
+            productResponse.setFeedbackStar(rateNum);
+            productResponses.add(productResponse);
+        }
+        return productResponses;
     }
 
 }

@@ -31,12 +31,12 @@ public class OrderDetail implements Serializable {
     ProductVariant variant;
 
     @Column(nullable = false)
-    BigDecimal price;
+    Double price;
 
     @Column(nullable = false)
     Integer quantity;
 
     @Column(nullable = false)
-    BigDecimal total;
+    Double total;
 }
 

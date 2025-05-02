@@ -1,9 +1,12 @@
 package com.example.demo.Service;
 import com.example.demo.DTO.Request.AccountRequest;
+import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.Entity.Account;
+import com.example.demo.Entity.Cart;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
 import com.example.demo.Repository.AccountRepository;
+import com.example.demo.Repository.CartRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
     AccountRepository accountRepository;
+    CartRepository cartRepository;
     PasswordEncoder passwordEncoder;
 
     public boolean checkExistingEmail(String email) {
@@ -34,8 +38,17 @@ public class AccountService {
        Account account = new Account();
        account.setEmail(accountRequest.getEmail());
        account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
+       account.setFullname(accountRequest.getFullname());
+       account.setPhone(accountRequest.getPhone());
+
+        // Lưu thông tin tài khoản
        accountRepository.save(account);
-       return true;
+
+        // Tạo giỏ hàng cho người dùng
+        Cart cart = new Cart();
+        cart.setAccount(account);
+        cartRepository.save(cart);
+        return true;
     }
 
     public boolean updateAccount(AccountRequest accountRequest) {
@@ -47,11 +60,11 @@ public class AccountService {
     }
 
 
-    public boolean authenticateAccount(AccountRequest accountRequest) {
-        Account account = accountRepository.findByEmail(accountRequest.getEmail())
+    public boolean authenticateAccount(LoginRequest loginRequest) {
+        Account account = accountRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(accountRequest.getPassword(), account.getPassword());
+        boolean authenticated = passwordEncoder.matches(loginRequest.getPassword(), account.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
