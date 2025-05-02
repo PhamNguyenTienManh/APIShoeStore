@@ -3,19 +3,16 @@ package com.example.demo.DTO.Response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductDetailResponse {
-    Long id;
-    String name;
-    String image;
-    Double price;
-    String description;
-    Float feedbackStar;
-    Set<Integer> size;
+public class OrderDetailResponse {
+    private Long variantId;
+    private String productName;
+    private Double price;
+    private int quantity;
+    private Double total;
+
 }

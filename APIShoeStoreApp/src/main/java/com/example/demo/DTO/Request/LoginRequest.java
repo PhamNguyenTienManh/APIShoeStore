@@ -9,14 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountRequest {
+public class LoginRequest {
     String email;
-
-    @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
-
-    String fullname;
-
-    @Size(min = 10, message = "PHONE_NUMBER_INVALID")
-    String phone;
 }

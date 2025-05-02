@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.DTO.Request.AccountDetailRequest;
 import com.example.demo.DTO.Request.AccountRequest;
+import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.DTO.Response.APIResponse;
 import com.example.demo.Entity.Account;
 import com.example.demo.Service.AccountService;
@@ -45,9 +46,9 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-     public APIResponse<Boolean> authenticateAccount (@RequestBody AccountRequest accountRequest) {
+     public APIResponse<Boolean> authenticateAccount (@RequestBody LoginRequest loginRequest) {
         APIResponse<Boolean> apiResponse = new APIResponse<>();
-        apiResponse.setResult(accountService.authenticateAccount(accountRequest));
+        apiResponse.setResult(accountService.authenticateAccount(loginRequest));
         return apiResponse;
     }
 
