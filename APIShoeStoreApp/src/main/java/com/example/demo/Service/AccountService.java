@@ -1,4 +1,5 @@
 package com.example.demo.Service;
+import com.example.demo.DTO.Request.AccountDetailRequest;
 import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.Entity.Account;
@@ -69,5 +70,14 @@ public class AccountService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         return authenticated;
+    }
+
+    public boolean updateAccountDetails (Long id , AccountDetailRequest accountDetailRequest) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
+        account.setFullname(accountDetailRequest.getFullname());
+        account.setPhone(accountDetailRequest.getPhone());
+        account.setDob(accountDetailRequest.getBirthday());
+        accountRepository.save(account);
+        return true;
     }
 }
