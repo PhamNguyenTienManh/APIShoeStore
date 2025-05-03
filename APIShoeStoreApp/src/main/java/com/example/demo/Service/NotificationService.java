@@ -28,7 +28,7 @@ public class NotificationService {
     private AccountRepository accountRepository;
 
     public List<NotificationResponse> findById(Long id) {
-        Optional<List<Notification>> notifications = Optional.ofNullable(repository.findAllById(Collections.singleton(id)));
+        Optional<List<Notification>> notifications = Optional.ofNullable(repository.findByAccount_Id(id));
 
         if (notifications.isPresent()) {
             List<NotificationResponse> responses = new ArrayList<>();
