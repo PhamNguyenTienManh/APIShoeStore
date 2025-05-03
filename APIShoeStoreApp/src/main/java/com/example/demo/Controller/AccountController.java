@@ -5,6 +5,7 @@ import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.DTO.Response.APIResponse;
 import com.example.demo.Entity.Account;
+import com.example.demo.Exception.AppException;
 import com.example.demo.Service.AccountService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -54,10 +55,38 @@ public class AccountController {
 
     @PutMapping("/update_accountDetail/{id}")
     @ResponseBody
-    public APIResponse<Boolean> updateAccountDetail(@PathVariable Long id , @RequestBody AccountDetailRequest accountDetailRequest) {
+    public APIResponse<Boolean> updateAccountDetail(@PathVariable Long id, @RequestBody AccountDetailRequest accountDetailRequest) {
         APIResponse<Boolean> apiResponse = new APIResponse<>();
-        apiResponse.setResult(accountService.updateAccountDetails(id, accountDetailRequest));
-        return apiResponse;
+        System.out.println("API update_accountDetail was called with id: " + id);
+        System.out.println("Received data: " + accountDetailRequest);
+        if (accountDetailRequest == null) {
+            apiResponse.setCode(400);
+            System.out.println("Lỗi 400");
+            apiResponse.setMessage("Account details cannot be null");
+            apiResponse.setResult(false);
+            return apiResponse;
+        }
+
+        try {
+            boolean result = accountService.updateAccountDetails(id, accountDetailRequest);
+            System.out.println("Received data: " + accountDetailRequest);
+            apiResponse.setResult(result);
+            apiResponse.setCode(200);
+            return apiResponse;
+        } catch (AppException ex) {
+            System.out.println("Lỗi 404");
+            apiResponse.setCode(404);
+            apiResponse.setMessage(ex.getMessage());
+            apiResponse.setResult(false);
+            return apiResponse;
+        } catch (Exception e) {
+            apiResponse.setCode(500);
+            System.out.println("Lỗi 500");
+            apiResponse.setMessage("An error occurred while updating account details");
+            apiResponse.setResult(false);
+            return apiResponse;
+        }
     }
+
 
 }

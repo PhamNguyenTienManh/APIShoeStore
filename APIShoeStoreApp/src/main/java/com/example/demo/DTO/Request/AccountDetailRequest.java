@@ -1,6 +1,7 @@
 package com.example.demo.DTO.Request;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 public class AccountDetailRequest {
     String fullname;
     String phone;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate birthday;
 
 }
