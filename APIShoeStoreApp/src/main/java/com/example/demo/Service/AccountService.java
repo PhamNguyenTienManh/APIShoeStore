@@ -72,12 +72,16 @@ public class AccountService {
         return authenticated;
     }
 
-    public boolean updateAccountDetails (Long id , AccountDetailRequest accountDetailRequest) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
+    public boolean updateAccountDetails(Long id, AccountDetailRequest accountDetailRequest) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
         account.setFullname(accountDetailRequest.getFullname());
         account.setPhone(accountDetailRequest.getPhone());
         account.setDob(accountDetailRequest.getBirthday());
+
         accountRepository.save(account);
         return true;
     }
+
 }

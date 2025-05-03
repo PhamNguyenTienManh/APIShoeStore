@@ -3,6 +3,7 @@ package com.example.demo.Service;
 
 import com.example.demo.DTO.Request.OrderRequest;
 import com.example.demo.DTO.Response.OrderDetailResponse;
+import com.example.demo.DTO.Response.OrderHistoryResponse;
 import com.example.demo.DTO.Response.OrderResponse;
 import com.example.demo.Entity.*;
 import com.example.demo.Enum.OrderStatus;
@@ -32,6 +33,7 @@ import java.util.List;
 @Slf4j
 public class OrderService {
     OrderRepository orderRepository;
+
     AccountRepository accountRepository;
     CartRepository cartRepository;
     PaymentRepository paymentRepository;
@@ -128,6 +130,15 @@ public class OrderService {
                 savedOrder.getStatus(),
                 orderDetailResponseList
         );
+    }
+
+    public List<OrderHistoryResponse> getOrderHistoryByAccountId(Long userId) {
+        try {
+            return orderRepository.getOrderSummariesByUserId(userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
 }
