@@ -2,6 +2,7 @@ package com.example.demo.Service;
 import com.example.demo.DTO.Request.AccountDetailRequest;
 import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
+import com.example.demo.DTO.Response.LoginResponse;
 import com.example.demo.Entity.Account;
 import com.example.demo.Entity.Cart;
 import com.example.demo.Exception.AppException;
@@ -61,15 +62,20 @@ public class AccountService {
     }
 
 
-    public boolean authenticateAccount(LoginRequest loginRequest) {
+    public LoginResponse authenticateAccount(LoginRequest loginRequest) {
         Account account = accountRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
+        LoginResponse loginResponse = new LoginResponse();
+
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(loginRequest.getPassword(), account.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        return authenticated;
+        else{
+            loginResponse.setUserId(account.getId());
+        }
+         return loginResponse;
     }
 
     public boolean updateAccountDetails (Long id , AccountDetailRequest accountDetailRequest) {
