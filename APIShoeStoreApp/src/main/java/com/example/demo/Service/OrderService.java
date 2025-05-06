@@ -10,10 +10,7 @@ import com.example.demo.Enum.OrderStatus;
 import com.example.demo.Enum.PaymentType;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Exception.ErrorCode;
-import com.example.demo.Repository.AccountRepository;
-import com.example.demo.Repository.CartRepository;
-import com.example.demo.Repository.OrderRepository;
-import com.example.demo.Repository.PaymentRepository;
+import com.example.demo.Repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,7 @@ public class OrderService {
     AccountRepository accountRepository;
     CartRepository cartRepository;
     PaymentRepository paymentRepository;
+    ProductVariantRepository productVariantRepository;
 
     @Transactional
     public OrderResponse makeOrder(OrderRequest requestInfo) {
@@ -50,18 +48,28 @@ public class OrderService {
             throw new AppException(ErrorCode.CART_IS_EMPTY);
         }
 
+        // Check số lượng tồn kho hợp lệ
+        for (CartItem cartItem : cart.getCartItems()) {
+            ProductVariant variant = cartItem.getVariant();
+            int quantity = cartItem.getQuantity();
+
+            // Kiểm tra số lượng trong kho
+            if (variant.getStock() < quantity) {
+                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK);
+            }
+        }
 
         Order order = Order.builder()
-                .account(account)
-                .name(requestInfo.getName())
-                .phone(requestInfo.getPhone())
-                .province(requestInfo.getProvince())
-                .district(requestInfo.getDistrict())
-                .commune(requestInfo.getCommune())
-                .detailedAddress(requestInfo.getDetailedAddress())
-                .orderDate(LocalDateTime.now())
-                .status(OrderStatus.PENDING)
-                .build();
+            .account(account)
+            .name(requestInfo.getName())
+            .phone(requestInfo.getPhone())
+            .province(requestInfo.getProvince())
+            .district(requestInfo.getDistrict())
+            .commune(requestInfo.getCommune())
+            .detailedAddress(requestInfo.getDetailedAddress())
+            .orderDate(LocalDateTime.now())
+            .status(OrderStatus.PENDING)
+            .build();
 
         Double total = 0.0;
         List<OrderDetail> orderDetailList = new ArrayList<>();
@@ -85,6 +93,10 @@ public class OrderService {
             orderDetailList.add(detail);
             total += itemTotal;
 
+            // Cập nhật lại số lượng product variant
+            variant.setStock(variant.getStock() - quantity);
+            productVariantRepository.save(variant);
+
             // Mapping orderDetail vào orderDetailResponse
             OrderDetailResponse detailResponse = new OrderDetailResponse();
             detailResponse.setVariantId(variant.getId());
@@ -99,6 +111,7 @@ public class OrderService {
         order.setTotal(total);
 
         Order savedOrder = orderRepository.save(order);
+
 
         // Xóa cartItem trong cart
         cart.getCartItems().clear();
