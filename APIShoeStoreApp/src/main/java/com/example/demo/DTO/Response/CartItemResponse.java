@@ -18,5 +18,6 @@ public class CartItemResponse {
     String productName;
     Integer size;
     Integer quantity;
+    String image;
     double total_price;
 }

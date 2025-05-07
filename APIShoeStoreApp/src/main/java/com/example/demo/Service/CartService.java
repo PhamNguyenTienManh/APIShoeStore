@@ -43,6 +43,11 @@ public class CartService {
                 .orElseThrow(()-> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
 
 
+        // Kiểm tra số lượng trong kho
+        if (productVariant.getStock() < addToCartRequest.getQuantity()) {
+            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK);
+        }
+
         Optional<CartItem> optionalItem = cart.getCartItems()
                 .stream()
                 .filter(item -> item.getVariant().getId().equals(productVariant.getId()))
@@ -57,15 +62,15 @@ public class CartService {
             int newQuantity = existingItem.getQuantity() + addToCartRequest.getQuantity();
             existingItem.setQuantity(newQuantity);
             // Set lại tổng tiền
-            double newTotalPrice = product.getPrice()*newQuantity;
-            existingItem.setTotal_price(newTotalPrice);
+           // double newTotalPrice = product.getPrice()*newQuantity;
+            //existingItem.setTotal_price(newTotalPrice);
             cartItemRepository.save(existingItem);
         } else {
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setVariant(productVariant);
             cartItem.setQuantity(addToCartRequest.getQuantity());
-            double newTotalPrice = product.getPrice()*addToCartRequest.getQuantity();
+            double newTotalPrice = product.getPrice();
             cartItem.setTotal_price(newTotalPrice);
             cartItemRepository.save(cartItem);
         }
@@ -83,6 +88,7 @@ public class CartService {
             CartItemResponse cartItemResponse = new CartItemResponse();
             cartItemResponse.setId(cartItem.getId());
             cartItemResponse.setProductName(cartItem.getVariant().getProduct().getName());
+            cartItemResponse.setImage(cartItem.getVariant().getProduct().getImage());
             cartItemResponse.setQuantity(cartItem.getQuantity());
             cartItemResponse.setSize(cartItem.getVariant().getSize());
             cartItemResponse.setTotal_price(cartItem.getTotal_price());
