@@ -35,7 +35,7 @@ public class CartController {
         return apiResponse;
     }
 
-    @DeleteMapping("/{cartItemId}")
+    @DeleteMapping("delete/{cartItemId}")
     public APIResponse<Boolean> deleteCartItemFromCart(@PathVariable Long cartItemId){
         APIResponse<Boolean> apiResponse = new APIResponse<>();
         apiResponse.setResult( cartService.deleteCartItemFromCart(cartItemId));
