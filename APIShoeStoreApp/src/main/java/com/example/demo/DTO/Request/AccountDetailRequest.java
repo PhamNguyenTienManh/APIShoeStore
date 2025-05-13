@@ -13,9 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountDetailRequest {
-    String fullname;
+    String name;
     String phone;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDate birthday;
+    String birthday;
 
 }
