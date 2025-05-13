@@ -3,6 +3,7 @@ import com.example.demo.DTO.Request.AccountDetailRequest;
 import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.DTO.Response.LoginResponse;
+import com.example.demo.DTO.Response.UserDetailResponse;
 import com.example.demo.Entity.Account;
 import com.example.demo.Entity.Cart;
 import com.example.demo.Exception.AppException;
@@ -16,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -40,7 +45,7 @@ public class AccountService {
        Account account = new Account();
        account.setEmail(accountRequest.getEmail());
        account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
-       account.setFullname(accountRequest.getFullname());
+       account.setFullname(accountRequest.getFullName());
        account.setPhone(accountRequest.getPhone());
 
         // Lưu thông tin tài khoản
@@ -82,12 +87,22 @@ public class AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        account.setFullname(accountDetailRequest.getFullname());
+        account.setFullname(accountDetailRequest.getName());
         account.setPhone(accountDetailRequest.getPhone());
-        account.setDob(accountDetailRequest.getBirthday());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(accountDetailRequest.getBirthday(), formatter);
+        account.setDob(date);
 
         accountRepository.save(account);
         return true;
+    }
+    public UserDetailResponse getUserDetail(Long id) {
+        Optional<Account> account = accountRepository.findById(id);
+        UserDetailResponse userDetailResponse = new UserDetailResponse();
+        userDetailResponse.setName(account.get().getFullname());
+        userDetailResponse.setNumber(account.get().getPhone());
+        userDetailResponse.setBirthday(account.get().getDob());
+        return userDetailResponse;
     }
 
 }

@@ -15,7 +15,7 @@ public class AccountRequest {
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
 
-    String fullname;
+    String fullName;
 
     @Size(min = 10, message = "PHONE_NUMBER_INVALID")
     String phone;

@@ -5,6 +5,7 @@ import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.DTO.Response.APIResponse;
 import com.example.demo.DTO.Response.LoginResponse;
+import com.example.demo.DTO.Response.UserDetailResponse;
 import com.example.demo.Entity.Account;
 import com.example.demo.Exception.AppException;
 import com.example.demo.Service.AccountService;
@@ -72,7 +73,6 @@ public class AccountController {
             boolean result = accountService.updateAccountDetails(id, accountDetailRequest);
             System.out.println("Received data: " + accountDetailRequest);
             apiResponse.setResult(result);
-            apiResponse.setCode(200);
             return apiResponse;
         } catch (AppException ex) {
             System.out.println("Lỗi 404");
@@ -80,13 +80,20 @@ public class AccountController {
             apiResponse.setMessage(ex.getMessage());
             apiResponse.setResult(false);
             return apiResponse;
-        } catch (Exception e) {
-            apiResponse.setCode(500);
-            System.out.println("Lỗi 500");
-            apiResponse.setMessage("An error occurred while updating account details");
-            apiResponse.setResult(false);
-            return apiResponse;
-        }
+        }  catch (Exception e) {
+        apiResponse.setCode(500);
+        apiResponse.setMessage("An error occurred while updating account details");
+        apiResponse.setResult(false);
+        e.printStackTrace();  // In chi tiết stack trace ra log để xác định nguyên nhân
+        return apiResponse;
+    }
+
+}
+    @GetMapping("/userDetail/{id}")
+    @ResponseBody
+    public UserDetailResponse getUserDetailByUserId(@PathVariable Long id){
+        System.out.println("Received data: " + id);
+        return accountService.getUserDetail(id);
     }
 
 
