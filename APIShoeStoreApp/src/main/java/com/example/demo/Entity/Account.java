@@ -52,6 +52,8 @@ public class Account implements Serializable {
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     private Cart cart;
 
+    String image;
+
 
 
 }

@@ -23,8 +23,8 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/add")
-    public APIResponse<OrderResponse> addOrder(@RequestBody OrderRequest orderRequest) {
-        APIResponse<OrderResponse> apiResponse = new APIResponse<>();
+    public APIResponse<Boolean> addOrder(@RequestBody OrderRequest orderRequest) {
+        APIResponse<Boolean> apiResponse = new APIResponse<>();
         apiResponse.setResult(orderService.makeOrder(orderRequest));
         return apiResponse;
     }
