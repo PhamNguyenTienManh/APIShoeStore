@@ -1,5 +1,6 @@
 package com.example.demo.DTO.Request;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,8 +16,9 @@ public class AccountRequest {
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
 
+    @Nullable
     String fullName;
 
-    @Size(min = 10, message = "PHONE_NUMBER_INVALID")
+    @Nullable
     String phone;
 }
