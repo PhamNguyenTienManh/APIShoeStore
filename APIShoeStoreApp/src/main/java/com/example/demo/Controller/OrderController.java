@@ -35,4 +35,12 @@ public class OrderController {
         apiResponse.setResult(orderService.getOrderHistoryByAccountId(user_id));
         return apiResponse;
     }
+
+    @PatchMapping("/review/{orderId}")
+    public APIResponse<Boolean> reviewOrder(@PathVariable Long orderId) {
+        APIResponse<Boolean> apiResponse = new APIResponse<>();
+        apiResponse.setResult(orderService.reviewOrder(orderId));
+        return apiResponse;
+    }
+
 }
