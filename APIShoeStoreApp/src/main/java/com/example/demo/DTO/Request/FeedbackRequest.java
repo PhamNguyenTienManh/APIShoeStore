@@ -16,5 +16,5 @@ public class FeedbackRequest {
     String comment;
     Integer rate;
     Long user_id;
-    Long pid;
+    String productName;
 }

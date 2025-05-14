@@ -32,7 +32,8 @@ public class FeedbackService {
         Feedback feedback = new Feedback();
         Account account = new Account();
         Product product = new Product();
-        product.setId(feedbackRequest.getPid());
+        product = productRepository.findByName(feedbackRequest.getProductName())
+                        .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         account.setId(feedbackRequest.getUser_id());
         feedback.setAccount(account);
         feedback.setComment(feedbackRequest.getComment());
