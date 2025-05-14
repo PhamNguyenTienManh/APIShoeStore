@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DTO.Request.AccountDetailRequest;
+import com.example.demo.DTO.Request.AccountImage;
 import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.DTO.Response.APIResponse;
@@ -16,6 +17,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -54,7 +57,12 @@ public class AccountController {
         apiResponse.setResult(accountService.authenticateAccount(loginRequest));
         return apiResponse;
     }
-
+    @PostMapping("/updateImage/{id}")
+    public APIResponse<Boolean> updateImage (@PathVariable Long id,@RequestBody AccountImage accountImage) {
+        APIResponse<Boolean> apiResponse = new APIResponse<>();
+        apiResponse.setResult(accountService.updateImage(id, accountImage));
+        return apiResponse;
+    }
     @PutMapping("/update_accountDetail/{id}")
     @ResponseBody
     public APIResponse<Boolean> updateAccountDetail(@PathVariable Long id, @RequestBody AccountDetailRequest accountDetailRequest) {
@@ -94,6 +102,12 @@ public class AccountController {
     public UserDetailResponse getUserDetailByUserId(@PathVariable Long id){
         System.out.println("Received data: " + id);
         return accountService.getUserDetail(id);
+    }
+
+    @GetMapping("user/image/{id}")
+    @ResponseBody
+    public String getImageURL(@PathVariable Long id){
+        return accountService.findImageURL(id);
     }
 
 

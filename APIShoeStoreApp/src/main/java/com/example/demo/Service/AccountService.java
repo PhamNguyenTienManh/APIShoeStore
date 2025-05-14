@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 import com.example.demo.DTO.Request.AccountDetailRequest;
+import com.example.demo.DTO.Request.AccountImage;
 import com.example.demo.DTO.Request.AccountRequest;
 import com.example.demo.DTO.Request.LoginRequest;
 import com.example.demo.DTO.Response.LoginResponse;
@@ -102,7 +103,21 @@ public class AccountService {
         userDetailResponse.setName(account.get().getFullname());
         userDetailResponse.setNumber(account.get().getPhone());
         userDetailResponse.setBirthday(account.get().getDob());
+        userDetailResponse.setImage(account.get().getImage());
         return userDetailResponse;
+    }
+    public Boolean updateImage(Long id, AccountImage accountImage){
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+        account.setImage(accountImage.getImage());
+        accountRepository.save(account);
+        return true;
+    }
+    public String findImageURL(Long id){
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        return account.getImage();
     }
 
 }

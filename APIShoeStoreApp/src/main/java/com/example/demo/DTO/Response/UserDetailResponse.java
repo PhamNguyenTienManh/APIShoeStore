@@ -18,4 +18,5 @@ public class UserDetailResponse {
     String name;
     String number;
     LocalDate birthday;
+    String image;
 }
