@@ -62,8 +62,8 @@ public class CartService {
             int newQuantity = existingItem.getQuantity() + addToCartRequest.getQuantity();
             existingItem.setQuantity(newQuantity);
             // Set lại tổng tiền
-           // double newTotalPrice = product.getPrice()*newQuantity;
-            //existingItem.setTotal_price(newTotalPrice);
+            double newTotalPrice = product.getPrice()*newQuantity;
+            existingItem.setTotal_price(newTotalPrice);
             cartItemRepository.save(existingItem);
         } else {
             CartItem cartItem = new CartItem();

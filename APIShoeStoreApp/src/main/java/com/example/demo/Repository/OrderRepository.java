@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("""
     SELECT new com.example.demo.DTO.Response.OrderHistoryResponse(
-        o.id, o.orderDate, o.total, p.name, d.quantity, o.commune, o.detailedAddress, o.district, o.province
+        o.id, o.orderDate, o.total, p.name, p.image, d.quantity,v.size, o.commune, o.detailedAddress, o.district, o.province
     )
     FROM Order o
     JOIN o.orderDetails d
