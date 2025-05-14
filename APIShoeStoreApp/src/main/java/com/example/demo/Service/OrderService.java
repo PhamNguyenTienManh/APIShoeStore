@@ -37,7 +37,7 @@ public class OrderService {
     ProductVariantRepository productVariantRepository;
 
     @Transactional
-    public OrderResponse makeOrder(OrderRequest requestInfo) {
+    public boolean makeOrder(OrderRequest requestInfo) {
         Account account = accountRepository.findById(requestInfo.getAccountId())
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
@@ -130,19 +130,7 @@ public class OrderService {
 
 
         // Trả về orderResponse
-        return new OrderResponse(
-                savedOrder.getId(),
-                savedOrder.getName(),
-                savedOrder.getPhone(),
-                savedOrder.getProvince(),
-                savedOrder.getDistrict(),
-                savedOrder.getCommune(),
-                savedOrder.getDetailedAddress(),
-                savedOrder.getOrderDate(),
-                savedOrder.getTotal(),
-                savedOrder.getStatus(),
-                orderDetailResponseList
-        );
+        return true;
     }
 
     public List<OrderHistoryResponse> getOrderHistoryByAccountId(Long userId) {

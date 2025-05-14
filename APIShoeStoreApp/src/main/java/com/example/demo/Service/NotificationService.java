@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +59,7 @@ public class NotificationService {
         Notification notification = new Notification();
         notification.setTitle(notificationRequest.getTitle());
         notification.setMessage(notificationRequest.getContent());
-        notification.setCreatedAt(notificationRequest.getTimestamp());
+        notification.setCreatedAt(LocalDateTime.now());
         notification.setAccount(account);
 
         repository.save(notification);
