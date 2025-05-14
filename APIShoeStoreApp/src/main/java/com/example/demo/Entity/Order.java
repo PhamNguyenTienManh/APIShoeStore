@@ -54,5 +54,6 @@ public class Order implements Serializable {
     @Column(nullable = false)
     OrderStatus status;
 
+    Integer isReview;
 }
 

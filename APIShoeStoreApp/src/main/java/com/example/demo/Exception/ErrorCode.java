@@ -17,6 +17,7 @@ public enum ErrorCode {
     CART_ITEM_NOT_FOUND(2005, "Cart item not found"),
     CART_IS_EMPTY(2006, "Cart is empty"),
     NOT_ENOUGH_STOCK(2007, "Not enough product in stock"),
+    ORDER_NOT_FOUND(2008, "Order not found"),
     ;
     ErrorCode(int code, String message) {
         this.code = code;

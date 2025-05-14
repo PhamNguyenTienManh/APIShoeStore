@@ -15,6 +15,9 @@ public class OrderHistoryResponse {
     private String detailedAddress;
     private String district;
     private String province;
+    private Integer isReview;
+
+
 
     public String getCommune() {
         return commune;
@@ -103,6 +106,14 @@ public class OrderHistoryResponse {
         this.image = image;
     }
 
+    public Integer getIsReview() {
+        return isReview;
+    }
+
+    public void setIsReview(Integer isReview) {
+        this.isReview = isReview;
+    }
+
     public OrderHistoryResponse(Long orderId, LocalDateTime orderDate, Double orderTotal,
                                 String productName, Integer quantity) {
         this.orderId = orderId;
@@ -153,6 +164,23 @@ public class OrderHistoryResponse {
         this.detailedAddress = detailedAddress;
         this.district = district;
         this.province = province;
+    }
+
+    public OrderHistoryResponse(Long orderId, LocalDateTime orderDate, Double orderTotal,
+                                String productName, String image, Integer quantity, Integer size,
+                                String commune, String detailedAddress, String district, String province, Integer isReview) {
+        this.orderId = orderId;
+        this.orderDate = orderDate;
+        this.orderTotal = orderTotal;
+        this.productName = productName;
+        this.image = image;
+        this.quantity = quantity;
+        this.size = size;
+        this.commune = commune;
+        this.detailedAddress = detailedAddress;
+        this.district = district;
+        this.province = province;
+        this.isReview = isReview;
     }
 
 }

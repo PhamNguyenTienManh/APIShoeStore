@@ -154,4 +154,12 @@ public class OrderService {
         }
     }
 
+    public Boolean reviewOrder(Long orderId) {
+        Order order =orderRepository.findById (orderId)
+                .orElseThrow(()-> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        order.setIsReview(1);
+        orderRepository.save(order);
+        return true;
+    }
+
 }
