@@ -60,16 +60,17 @@ public class OrderService {
         }
 
         Order order = Order.builder()
-            .account(account)
-            .name(requestInfo.getName())
-            .phone(requestInfo.getPhone())
-            .province(requestInfo.getProvince())
-            .district(requestInfo.getDistrict())
-            .commune(requestInfo.getCommune())
-            .detailedAddress(requestInfo.getDetailedAddress())
-            .orderDate(LocalDateTime.now())
-            .status(OrderStatus.PENDING)
-            .build();
+                .account(account)
+                .name(requestInfo.getName())
+                .phone(requestInfo.getPhone())
+                .province(requestInfo.getProvince())
+                .district(requestInfo.getDistrict())
+                .commune(requestInfo.getCommune())
+                .detailedAddress(requestInfo.getDetailedAddress())
+                .orderDate(LocalDateTime.now())
+                .status(OrderStatus.PENDING)
+                .isReview(0)
+                .build();
 
         Double total = 0.0;
         List<OrderDetail> orderDetailList = new ArrayList<>();
@@ -143,8 +144,8 @@ public class OrderService {
     }
 
     public Boolean reviewOrder(Long orderId) {
-        Order order =orderRepository.findById (orderId)
-                .orElseThrow(()-> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         order.setIsReview(1);
         orderRepository.save(order);
         return true;
