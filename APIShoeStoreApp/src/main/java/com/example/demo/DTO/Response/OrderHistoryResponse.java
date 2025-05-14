@@ -8,7 +8,9 @@ public class OrderHistoryResponse {
     private LocalDateTime orderDate;
     private Double orderTotal;
     private String productName;
+    private String image;
     private Integer quantity;
+    private Integer size;
     private String commune;
     private String detailedAddress;
     private String district;
@@ -85,6 +87,21 @@ public class OrderHistoryResponse {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public OrderHistoryResponse(Long orderId, LocalDateTime orderDate, Double orderTotal,
                                 String productName, Integer quantity) {
@@ -106,5 +123,36 @@ public class OrderHistoryResponse {
         this.district = district;
         this.province = province;
     }
-// Getter/setter nếu cần
+
+    public OrderHistoryResponse(Long orderId, LocalDateTime orderDate, Double orderTotal,
+                                String productName, String image, Integer quantity, Integer size,
+                                String commune, String detailedAddress, String district, String province) {
+        this.orderId = orderId;
+        this.orderDate = orderDate;
+        this.orderTotal = orderTotal;
+        this.productName = productName;
+        this.image = image;
+        this.quantity = quantity;
+        this.size = size;
+        this.commune = commune;
+        this.detailedAddress = detailedAddress;
+        this.district = district;
+        this.province = province;
+    }
+
+    public OrderHistoryResponse(Long orderId, LocalDateTime orderDate, Double orderTotal,
+                                String productName, Integer quantity, Integer size,
+                                String commune, String detailedAddress, String district, String province) {
+        this.orderId = orderId;
+        this.orderDate = orderDate;
+        this.orderTotal = orderTotal;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.size = size;
+        this.commune = commune;
+        this.detailedAddress = detailedAddress;
+        this.district = district;
+        this.province = province;
+    }
+
 }
