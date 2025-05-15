@@ -24,43 +24,59 @@ public class CartItemService {
 
     private final CartItemRepository cartItemRepository;
 
+
     @Transactional
     public boolean updateCartItems(List<CartItemUpdateRequest> cartItemUpdateRequestList) {
+        StringBuilder errorMessageBuilder = new StringBuilder("Không đủ số lượng trong kho cho các sản phẩm sau:\n");
+
+        boolean hasError = false;
+
         for (CartItemUpdateRequest cartItemUpdateRequest : cartItemUpdateRequestList) {
             Optional<CartItem> optionalCartItem =
                     cartItemRepository.findById(cartItemUpdateRequest.getCartItemId());
 
-            ProductVariant productVariant = optionalCartItem.get().getVariant();
-
-            // Kiểm tra số lượng trong kho
-            if (productVariant.getStock() < cartItemUpdateRequest.getQuantity()) {
-                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK);
-            }
-
-            if (optionalCartItem.isPresent()) {
-                CartItem cartItem = optionalCartItem.get();
-                int newQuantity = cartItemUpdateRequest.getQuantity();
-
-                // Xóa nếu quantity <= 0
-                if (newQuantity <= 0) {
-                    cartItemRepository.delete(cartItem);
-                } else {
-                    // Set lại số lượng
-                    cartItem.setQuantity(newQuantity);
-                    // Set lại tổng tiền
-//                    cartItem.setTotal_price(
-//                            cartItem.getVariant().getProduct().getPrice()
-//                    );
-                    cartItemRepository.save(cartItem);
-                }
-            }
-            else
-            {
+            if (optionalCartItem.isEmpty()) {
                 throw new AppException(ErrorCode.CART_ITEM_NOT_FOUND);
             }
+
+            CartItem cartItem = optionalCartItem.get();
+            ProductVariant productVariant = cartItem.getVariant();
+
+            int requestedQuantity = cartItemUpdateRequest.getQuantity();
+            int availableStock = productVariant.getStock();
+
+            if (availableStock < requestedQuantity) {
+                hasError = true;
+                errorMessageBuilder.append(String.format(
+                        "Sản phẩm: %s (Size: %s) chỉ còn %d trong kho. Bạn không thể thêm %d sản phẩm.\n",
+                        productVariant.getProduct().getName(),
+                        productVariant.getSize(),
+                        availableStock,
+                        requestedQuantity
+                ));
+            }
         }
+
+        if (hasError) {
+            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, errorMessageBuilder.toString());
+        }
+
+        // Nếu không có lỗi, tiến hành cập nhật
+        for (CartItemUpdateRequest cartItemUpdateRequest : cartItemUpdateRequestList) {
+            CartItem cartItem = cartItemRepository.findById(cartItemUpdateRequest.getCartItemId()).get();
+            int newQuantity = cartItemUpdateRequest.getQuantity();
+
+            if (newQuantity <= 0) {
+                cartItemRepository.delete(cartItem);
+            } else {
+                cartItem.setQuantity(newQuantity);
+                cartItemRepository.save(cartItem);
+            }
+        }
+
         return true;
     }
+
 
 }
 

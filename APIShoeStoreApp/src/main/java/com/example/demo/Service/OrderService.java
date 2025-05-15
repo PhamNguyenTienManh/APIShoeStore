@@ -48,15 +48,28 @@ public class OrderService {
             throw new AppException(ErrorCode.CART_IS_EMPTY);
         }
 
-        // Check số lượng tồn kho hợp lệ
+        List<String> outOfStockErrors = new ArrayList<>();
+
+        // Kiểm tra số lượng tồn kho hợp lệ
         for (CartItem cartItem : cart.getCartItems()) {
             ProductVariant variant = cartItem.getVariant();
             int quantity = cartItem.getQuantity();
 
             // Kiểm tra số lượng trong kho
             if (variant.getStock() < quantity) {
-                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK);
+                String errorMessage = "Sản phẩm: " + variant.getProduct().getName() + " (Size: " + variant.getSize() + ") chỉ còn " + variant.getStock() + " trong kho. Bạn không thể thêm " + quantity + " sản phẩm.";
+                outOfStockErrors.add(errorMessage);
             }
+        }
+
+        // Nếu có sản phẩm nào không đủ số lượng trong kho
+        if (!outOfStockErrors.isEmpty()) {
+            // Trả về các lỗi tồn kho cho người dùng
+            StringBuilder errorMessage = new StringBuilder("Không đủ số lượng trong kho cho các sản phẩm sau:\n");
+            for (String error : outOfStockErrors) {
+                errorMessage.append(error).append("\n");
+            }
+            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, errorMessage.toString());
         }
 
         Order order = Order.builder()
@@ -113,12 +126,10 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-
         // Xóa cartItem trong cart
         cart.getCartItems().clear();
         // Lưu lại cart để đồng bộ hóa thay đổi vào cơ sở dữ liệu
         cartRepository.save(cart);
-
 
         // Lưu thông tin thanh toán xuống csdl
         Payment payment = Payment.builder()
@@ -129,10 +140,10 @@ public class OrderService {
                 .build();
         paymentRepository.save(payment);
 
-
         // Trả về orderResponse
         return true;
     }
+
 
     public List<OrderHistoryResponse> getOrderHistoryByAccountId(Long userId) {
         try {
