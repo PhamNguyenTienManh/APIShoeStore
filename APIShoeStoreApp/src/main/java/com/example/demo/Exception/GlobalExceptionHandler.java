@@ -16,14 +16,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    @ExceptionHandler(value = AppException.class)
-    ResponseEntity<APIResponse> handleAppException(AppException e) {
+//    @ExceptionHandler(value = AppException.class)
+//    ResponseEntity<APIResponse> handleAppException(AppException e) {
+//        ErrorCode errorCode = e.getErrorCode();
+//        APIResponse apiResponse = new APIResponse();
+//        apiResponse.setCode(errorCode.getCode());
+//        apiResponse.setMessage(errorCode.getMessage());
+//        return ResponseEntity.badRequest().body(apiResponse);
+//    }
+
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<APIResponse> handleAppException(AppException e) {
         ErrorCode errorCode = e.getErrorCode();
         APIResponse apiResponse = new APIResponse();
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
+
+        if (e.getCustomMessage() != null && !e.getCustomMessage().isEmpty()) {
+            apiResponse.setMessage(e.getCustomMessage());
+        } else {
+            apiResponse.setMessage(errorCode.getMessage());
+        }
+
         return ResponseEntity.badRequest().body(apiResponse);
     }
+
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     ResponseEntity<APIResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -39,4 +55,7 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(errorCode.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
+
+
+
 }

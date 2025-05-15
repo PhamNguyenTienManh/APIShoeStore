@@ -32,48 +32,54 @@ public class CartService {
     CartItemRepository cartItemRepository;
     ProductVariantRepository productVariantRepository;
 
-
     public boolean addToCart (AddToCartRequest addToCartRequest) {
         Cart cart = cartRepository.findByAccountId(addToCartRequest.getAccountId())
-                .orElseThrow(()-> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        // Tìm ProductVariant dựa trên productId và size
         ProductVariant productVariant = productVariantRepository.findByProductIdAndSize(
-                addToCartRequest.getProductId(), addToCartRequest.getSize())
-                .orElseThrow(()-> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
-
-
-        // Kiểm tra số lượng trong kho
-        if (productVariant.getStock() < addToCartRequest.getQuantity()) {
-            throw new AppException(ErrorCode.NOT_ENOUGH_STOCK);
-        }
+                        addToCartRequest.getProductId(), addToCartRequest.getSize())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_VARIANT_NOT_FOUND));
 
         Optional<CartItem> optionalItem = cart.getCartItems()
                 .stream()
                 .filter(item -> item.getVariant().getId().equals(productVariant.getId()))
                 .findFirst();
 
-        // Lấy giá tiền của product variant
+        int existingQuantity = optionalItem.map(CartItem::getQuantity).orElse(0);
+        int quantityToAdd = addToCartRequest.getQuantity();
+        int totalQuantityAfterAdd = existingQuantity + quantityToAdd;
+
+        if (productVariant.getStock() < totalQuantityAfterAdd) {
+            if (existingQuantity == 0) {
+                // Lần đầu thêm đã vượt kho
+                String message = "Số lượng bạn chọn (" + quantityToAdd + ") vượt quá số lượng còn lại trong kho ("
+                        + productVariant.getStock() + ").";
+                throw new AppException(ErrorCode.NOT_ENOUGH_STOCK, message);
+            } else {
+                // Đã có hàng trong giỏ, cộng dồn bị vượt
+                String message = "Bạn đã có " + existingQuantity + " sản phẩm trong giỏ hàng. "
+                        + "Không thể thêm " + quantityToAdd + " sản phẩm vì sẽ vượt quá số lượng còn lại trong kho ("
+                        + productVariant.getStock() + ").";
+                throw new AppException(ErrorCode.ADD_CART_OVER_STOCK, message);
+            }
+        }
+
+
         Product product = productVariant.getProduct();
 
-        // Nếu đã có thì tăng số lượng sản phẩm
         if (optionalItem.isPresent()) {
             CartItem existingItem = optionalItem.get();
-            int newQuantity = existingItem.getQuantity() + addToCartRequest.getQuantity();
-            existingItem.setQuantity(newQuantity);
-            // Set lại tổng tiền
-            double newTotalPrice = product.getPrice()*newQuantity;
-            existingItem.setTotal_price(newTotalPrice);
+            existingItem.setQuantity(totalQuantityAfterAdd);
             cartItemRepository.save(existingItem);
         } else {
             CartItem cartItem = new CartItem();
             cartItem.setCart(cart);
             cartItem.setVariant(productVariant);
             cartItem.setQuantity(addToCartRequest.getQuantity());
-            double newTotalPrice = product.getPrice();
-            cartItem.setTotal_price(newTotalPrice);
+            cartItem.setTotal_price(product.getPrice());
             cartItemRepository.save(cartItem);
         }
+
         return true;
     }
 
